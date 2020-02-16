@@ -126,7 +126,7 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
                         "/js/**",
                         "/swagger-ui.html",
                         "/swagger-ui.html/**",
-                        "/webjars/**", "/swagger-resources/**", "/v2/**","/configuration/**"
+                        "/webjars/**", "/swagger-resources/**", "/v2/**","/configuration/**", "/callback", "/callback/**"
                     )
                     .permitAll()
                     .antMatchers(HttpMethod.GET,"/user/*").hasRole("ADMIN")

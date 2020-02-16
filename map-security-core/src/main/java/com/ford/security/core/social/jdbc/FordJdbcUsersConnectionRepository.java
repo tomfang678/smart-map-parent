@@ -28,7 +28,7 @@ import java.util.Set;
  * The supporting schema is defined in NrscJdbcUsersConnectionRepository.sql.
  * @author Keith Donald
  */
-public class NrscJdbcUsersConnectionRepository implements UsersConnectionRepository {
+public class FordJdbcUsersConnectionRepository implements UsersConnectionRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -40,7 +40,7 @@ public class NrscJdbcUsersConnectionRepository implements UsersConnectionReposit
 
     private String tablePrefix = "";
 
-    public NrscJdbcUsersConnectionRepository(DataSource dataSource, ConnectionFactoryLocator connectionFactoryLocator, TextEncryptor textEncryptor) {
+    public FordJdbcUsersConnectionRepository(DataSource dataSource, ConnectionFactoryLocator connectionFactoryLocator, TextEncryptor textEncryptor) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.connectionFactoryLocator = connectionFactoryLocator;
         this.textEncryptor = textEncryptor;
@@ -100,7 +100,7 @@ public class NrscJdbcUsersConnectionRepository implements UsersConnectionReposit
         if (userId == null) {
             throw new IllegalArgumentException("userId cannot be null");
         }
-        return new NrscJdbcConnectionRepository(userId, jdbcTemplate, connectionFactoryLocator, textEncryptor, tablePrefix);
+        return new FordJdbcConnectionRepository(userId, jdbcTemplate, connectionFactoryLocator, textEncryptor, tablePrefix);
     }
 
 }

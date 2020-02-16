@@ -69,4 +69,6 @@ public interface SecurityConstants {
     String ERROR_404="/error/404.html";
 
     String ERROR_500="/error/500.html";
+
+    String GITHUB_LOGIN="/auth/github";
 }

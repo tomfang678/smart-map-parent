@@ -32,7 +32,7 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.Map.Entry;
 
-class NrscJdbcConnectionRepository implements ConnectionRepository {
+class FordJdbcConnectionRepository implements ConnectionRepository {
 
 	private final String userId;
 	
@@ -44,7 +44,7 @@ class NrscJdbcConnectionRepository implements ConnectionRepository {
 
 	private final String tablePrefix;
 
-	public NrscJdbcConnectionRepository(String userId, JdbcTemplate jdbcTemplate, ConnectionFactoryLocator connectionFactoryLocator, TextEncryptor textEncryptor, String tablePrefix) {
+	public FordJdbcConnectionRepository(String userId, JdbcTemplate jdbcTemplate, ConnectionFactoryLocator connectionFactoryLocator, TextEncryptor textEncryptor, String tablePrefix) {
 		this.userId = userId;
 		this.jdbcTemplate = jdbcTemplate;
 		this.connectionFactoryLocator = connectionFactoryLocator;

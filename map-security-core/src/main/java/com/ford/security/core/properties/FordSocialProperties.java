@@ -14,4 +14,6 @@ public class FordSocialProperties {
     private QQProperties qq = new QQProperties();
 
     private WeiXinProperties weixin = new WeiXinProperties();
+
+    private GithubProperties github=new GithubProperties();
 }

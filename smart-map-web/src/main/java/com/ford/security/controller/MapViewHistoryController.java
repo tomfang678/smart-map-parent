@@ -1,7 +1,6 @@
 package com.ford.security.controller;
 
-import com.ford.security.dao.MapHistoryService;
-import com.ford.security.domain.MapViewInfo;
+import com.ford.security.service.MapHistoryService;
 import com.ford.security.entity.MapHistory;
 import com.ford.security.response.Response;
 import com.ford.security.response.ResponseUtil;

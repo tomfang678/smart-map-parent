@@ -1,4 +1,4 @@
-package com.ford.security.dao;
+package com.ford.security.service;
 
 import com.ford.security.entity.MapHistory;
 import com.ford.security.mapper.MapHistoryMapper;

@@ -4,6 +4,7 @@ import com.ford.security.core.pojo.SocialUserInfo;
 import com.ford.security.core.enums.ResultEnum;
 import com.ford.security.core.properties.FordSecurityProperties;
 import com.ford.security.core.enums.SecurityConstants;
+import com.ford.security.core.social.github.GithubConstant;
 import com.ford.security.core.utils.ResultVOUtil;
 import com.ford.security.core.vo.ResultVO;
 import lombok.extern.slf4j.Slf4j;
@@ -63,9 +64,15 @@ public class BrowserSecurityController {
             log.info("引发跳转的请求是:" + targetUrl);
 
             //如果请求url以.html结尾跳转到我们自己写的登录页----在前后端分离的项目里一般不会这样做
-            if (StringUtils.endsWithIgnoreCase(targetUrl, ".html")) {
+            if (StringUtils.endsWithIgnoreCase(targetUrl, "login.html")||StringUtils.endsWithIgnoreCase(targetUrl, "/login")) {
                 redirectStrategy.sendRedirect(request, response, fordSecurityProperties.getBrowser().getLoginPage());
             }
+            /*if (StringUtils.endsWithIgnoreCase(targetUrl, "/qqLogin/github")){
+                redirectStrategy.sendRedirect(request, response, GithubConstant.CODE_URL);
+            }
+            if (StringUtils.endsWithIgnoreCase(targetUrl,"/callback?code=")){
+                redirectStrategy.sendRedirect(request, response, GithubConstant.CODE_URL);
+            }*/
         }
         //如果有引发跳转的请求且不以html结尾
         //或者如果没有引发跳转的请求----即直接访问authentication/require

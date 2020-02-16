@@ -1,7 +1,7 @@
 package com.ford.security.core.social;
 
 import com.ford.security.core.properties.FordSecurityProperties;
-import com.ford.security.core.social.jdbc.NrscJdbcUsersConnectionRepository;
+import com.ford.security.core.social.jdbc.FordJdbcUsersConnectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,9 +51,9 @@ public class SocialConfig extends SocialConfigurerAdapter {
          * 第二个参数的作用：根据条件查找该用哪个ConnectionFactory来构建Connection对象
          * 第三个参数的作用: 对插入到userconnection表中的数据进行加密和解密
          */
-        NrscJdbcUsersConnectionRepository repository = new NrscJdbcUsersConnectionRepository(dataSource, connectionFactoryLocator, Encryptors.noOpText());
+        FordJdbcUsersConnectionRepository repository = new FordJdbcUsersConnectionRepository(dataSource, connectionFactoryLocator, Encryptors.noOpText());
         //设置userconnection表的前缀
-        repository.setTablePrefix("nrsc_");
+        repository.setTablePrefix("ford_");
 
         if (connectionSignUp != null) {
             //如果有spring容器里connectionSignUp这个bean时，将其注入到UsersConnectionRepository

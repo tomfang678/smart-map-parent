@@ -18,14 +18,10 @@
     <properties>
         <spring.social>1.1.6.RELEASE</spring.social>
         <mybatis-spring.version>2.1.1</mybatis-spring.version>
+        <skipTests>true</skipTests>
     </properties>
 
     <dependencies>
-        <!--        <dependency>
-                    <groupId>com.ford</groupId>
-                    <artifactId>map-security-app</artifactId>
-                    <version>${ford.security.version}</version>
-                </dependency>-->
         <dependency>
             <groupId>com.ford</groupId>
             <artifactId>map-security-core</artifactId>

@@ -31,6 +31,7 @@ public class FordAuthorizeConfigProvider implements AuthorizeConfigProvider {
                 SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_MOBILE,
                 browserProperties.getLoginPage(),
                 SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX + "/*",
+                SecurityConstants.GITHUB_LOGIN,
                 browserProperties.getSignUpUrl(),
                 browserProperties.getSession().getSessionInvalidUrl(),
                 browserProperties.getSignOutUrl())
