@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Ford interview written examination questions Demo</title>
+    <script src="jquery-3.4.1.min.js"></script>
+    <script src="spark-md5.min.js"></script>
+    <script type="text/javascript"
+            src="http://api.map.baidu.com/api?v=2.0&ak=GMf62U3cb0xG38UmDg3LnWMWPZlpwnoP"></script>
+</head>
+
+<body>
+<div>
+    <h2>Map search DEMO</h2>
+    <h3>Query the nearest Sinopec gas station and Ford 4S store within 5 KM </h3>
+</div>
+<label for="address">Address：</label><input name="address" id="address" maxlength="20" style="width:400px"/>
+<div id="r-result" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
+<button id="btnSearch" onclick="searchPointByAddress();">Search</button>
+<label name="point" id="point"></label>
+<div id="output" style="background-color: #000000; color: #FFFFFF; max-height: 500px;margin-bottom: 20px;"></div>
+<div style="width:600px;height:540px;border:1px solid gray;float:left;" id="container"></div>
+<div style="width:400px;height:540px;border:1px solid gray;border-left:0;float:left;font-size: 10px;" id="panel"></div>
+<!--<div style="width:800px;border:1px solid gray;border-left:0;font-size: 10px;" id="history"></div>-->
+<script type="text/javascript">
+    var map = new BMap.Map("container");
+    var mPoint = new BMap.Point(121.491963, 31.212197);
+    map.centerAndZoom(mPoint, 13);
+    map.enableScrollWheelZoom();
+
+    /*********************************
+     * search address and get point(lng,lat)
+     **********************************/
+    function searchPointByAddress() {
+        var keyword = $("#address").val();
+        if (!keyword) {
+            alert("please input address !")
+            return;
+        }
+        map.clearOverlays();
+        var myGeo = new BMap.Geocoder();
+        myGeo.getPoint(keyword, function (point) {
+            if (point) {
+                console.log("add :" + point.lng + "," + point.lat);
+                mPoint = new BMap.Point(point.lng, point.lat);
+                addMarker(mPoint, new BMap.Label(keyword, {offset: new BMap.Size(20, -10)}));
+                map.centerAndZoom(mPoint, 13);
+                $("#point").html("lng:" + point.lng + " lat:" + point.lat);
+                // map.enableScrollWheelZoom();  //启用滚轮缩放
+                searchStationName(mPoint);
+            }
+        });
+    }
+
+    /*********************************
+     * search nearby keyword ['福特4s店', '中石化加油站']
+     **********************************/
+    function searchStationName(mPoint) {
+        var circle = new BMap.Circle(mPoint, 5000, {
+            fillColor: "blue",
+            strokeWeight: 1,
+            fillOpacity: 0.3,
+            strokeOpacity: 0.3,
+            scope: 2
+        });
+        map.addOverlay(circle);
+        var myKeys = ["福特4s店", "中石化加油站"];
+        var local = new BMap.LocalSearch(map, {
+            renderOptions: {map: map, panel: "r-result", autoViewport: false}, onSearchComplete: function (results) {
+                if (local.getStatus() == BMAP_STATUS_SUCCESS) {
+                    var fordArray = [];
+                    var oilArray = [];
+                    var s = [];
+                    for (var x = 0; x < results.length; x++) {
+                        for (var i = 0; i < results[x].Br.length; i++) {
+                            var distance = map.getDistance(results[x].center, results[x].Br[i].point).toFixed(2);
+                            s.push(results[x].Br[i].title + ", " + results[x].Br[i].address + ", " + distance + " 米");
+                            var m = {
+                                title: results[x].Br[i].title,
+                                point: results[x].Br[i].point.lng + "，" + results[x].Br[i].point.lat,
+                                url: results[x].Br[i].url,
+                                detailUrl: results[x].Br[i].detailUrl,
+                                address: results[x].Br[i].address,
+                                city: results[x].Br[i].city,
+                                province: results[x].Br[i].province,
+                                phoneNumber: results[x].Br[i].phoneNumber,
+                                postcode: results[x].Br[i].postcode,
+                                type: results[x].Br[i].type,
+                                isAccurate: results[x].Br[i].isAccurate,
+                                distance: distance,
+                                keyword: results[x].keyword,
+                                tag: 0
+                            };
+                            if (results[x].keyword == "中石化加油站") {
+                                m.tag = 1;
+                                oilArray.push(m)
+                            } else {
+                                m.tag = 0;
+                                fordArray.push(m);
+                            }
+                        }
+                    }
+                    var rst = [];
+                    if (oilArray.length >= 1) {
+                        oilArray = oilArray.sort(compare("distance"));
+                        rst.push(oilArray[0]);
+                    }
+                    if (fordArray.length >= 1) {
+                        fordArray = fordArray.sort(compare("distance"));
+                        rst.push(fordArray[0]);
+                    }
+                    console.log(JSON.stringify(oilArray));
+                    console.log(JSON.stringify(fordArray));
+                    console.log(JSON.stringify(oilArray[0]));
+                    console.log(JSON.stringify(fordArray[0]));
+                    document.getElementById("panel").innerHTML = s.join("<br/>");
+                    //save search history
+                    saveHistory(rst);
+                }
+            }, pageCapacity: 10
+        });
+        local.searchNearby(myKeys, mPoint, 5000);
+    }
+
+    //order by arrary
+    function compare(property) {
+        return (firstobj, secondobj) =>
+        {
+            var firstValue = firstobj[property];
+            var secondValue = secondobj[property];
+            return firstValue - secondValue;
+        };
+    }
+
+    function addMarker(point, label) {
+        var marker = new BMap.Marker(point);
+        map.addOverlay(marker);
+        marker.setAnimation(BMAP_ANIMATION_BOUNCE);
+    }
+
+    /*********************************
+     * input search tip
+     * *******************************/
+    function G(id) {
+        return document.getElementById(id);
+    }
+
+    var ac = new BMap.Autocomplete(
+        {
+            "input": "address"
+            , "location": map
+        });
+
+    ac.addEventListener("onhighlight", function (e) {
+        var str = "";
+        var _value = e.fromitem.value;
+        var value = "";
+        if (e.fromitem.index > -1) {
+            value = _value.province + _value.city + _value.district + _value.street + _value.business;
+        }
+        str = "FromItem<br />index = " + e.fromitem.index + "<br />value = " + value;
+
+        value = "";
+        if (e.toitem.index > -1) {
+            _value = e.toitem.value;
+            value = _value.province + _value.city + _value.district + _value.street + _value.business;
+        }
+        str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
+        G("r-result").innerHTML = str;
+    });
+
+    var myValue;
+    ac.addEventListener("onconfirm", function (e) {
+        var _value = e.item.value;
+        myValue = _value.province + _value.city + _value.district + _value.street + _value.business;
+        G("r-result").innerHTML = "onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue;
+
+        setPlace();
+    });
+
+    function setPlace() {
+        map.clearOverlays();
+
+        function myFun() {
+            var pp = local.getResults().getPoi(0).point;
+            map.centerAndZoom(pp, 18);
+            map.addOverlay(new BMap.Marker(pp));
+        }
+
+        var local = new BMap.LocalSearch(map, {
+            onSearchComplete: myFun
+        });
+        local.search(myValue);
+    }
+
+    function saveHistory(data) {
+        console.log("test...");
+        $.ajax({
+            type: "post",
+            dataType: "json",
+            url: "/map/record",
+            contentType: "application/json;charset=UTF-8",//指定消息请求类型
+            data: JSON.stringify(data),//将js对象转成json对象
+            success: function (result) {
+                alert(JSON.stringify(result));
+                //document.getElementById("history").innerHTML = (JSON.stringify(result));
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

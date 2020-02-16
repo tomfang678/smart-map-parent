@@ -1,0 +1,115 @@
+server:
+  port: 8081
+  tomcat:
+    basedir: ./tomcat/temp
+
+spring:
+  application:
+    name: smart-map-web
+    ### 指定用什么存储session信息
+  session:
+      store-type: NONE
+    ###本地环境下不配置也可以
+      timeout: 200
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+
+  datasource:
+    #h2
+    url: jdbc:h2:mem:dbtest
+    username: sa
+    password: sa
+    driverClassName: org.h2.Driver
+    schema: classpath:db/schema.sql
+    data: classpath:db/data.sql
+    platform: h2
+  h2:
+    console:
+      settings:
+        web-allow-others: true
+        trace: true
+      path: /h2-console
+      enabled: true
+    #mysql
+    #driver-class-name: com.mysql.cj.jdbc.Driver
+    #url: jdbc:mysql://localhost:3306/smart-auth?&characterEncoding=utf8&useSSL=false&allowMultiQueries=true&serverTimezone=GMT
+    #username: root
+    #password: 123
+
+  redis:
+    ssl: false
+    timeout: 60S
+    host: localhost
+    port: 6379
+  data:
+    redis:
+      repositories:
+        enabled: false
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 110MB
+      location: ./tomcat/temp
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+
+system:
+  security:
+    code:
+      image:
+        length: 6 #图形验证码的位数为6，将覆盖默认配置中的4
+        width: 100 #图形验证码的宽度为100，将覆盖默认配置中的67，但由于请求中设置的宽度为200，所以真正的宽度将为200
+        urls: /hello,/me*
+
+    browser:
+      loginPage: /login.html
+      loginType: JSON
+      #signUpUrl: /nrsc-signUp.html
+      #signOutUrl: /nrsc-logout.html
+
+    social:
+      filterProcessesUrl: /qqLogin
+      qq:
+        app-id: 101492882
+        app-secret: 331a27395a82d54d53f9f55a33bde692
+        providerId: callback.do
+      weixin:
+        app-id: wx8a47a66e22296c62
+        app-secret: deb57af7ec1753a2668889e74b34b789
+
+    oauth2:
+      client:
+        # 真实项目中应放在数据库里
+        client-id: admin
+        client-secret: 123456
+        # 可以在这里简单的指定一个或多个redirect-uri，但真实项目中不会这样做，而是将其放在数据库里
+        # 大家可以好好想想为什么资源服务器非要我们指定redirect-uri呢？
+        registered-redirect-uri:
+          - http://www.cacaogl.com
+          - http://www.ford.com
+
+#h2配置
+  spring.jpa.show-sql = true #启用SQL语句的日志记录
+  spring.jpa.hibernate.ddl-auto = update  #设置ddl模式
+  ##数据库连接设置
+  spring.datasource.url = jdbc:h2:mem:dbtest  #配置h2数据库的连接地址
+  spring.datasource.username = sa  #配置数据库用户名
+  spring.datasource.password = sa  #配置数据库密码
+  spring.datasource.driverClassName =org.h2.Driver  #配置JDBC Driver
+  ##数据初始化设置
+  spring.datasource.schema=classpath:db/schema.sql  #进行该配置后，每次启动程序，程序都会运行resources/db/schema.sql文件，对数据库的结构进行操作。
+  spring.datasource.data=classpath:db/data.sql  #进行该配置后，每次启动程序，程序都会运行resources/db/data.sql文件，对数据库的数据操作。
+  ##h2 web console设置
+  spring.datasource.platform=h2  #表明使用的数据库平台是h2
+  spring.h2.console.settings.web-allow-others=true  # 进行该配置后，h2 web consloe就可以在远程访问了。否则只能在本机访问。
+  spring.h2.console.path=/h2  #进行该配置，你就可以通过YOUR_URL/h2访问h2 web consloe。YOUR_URL是你程序的访问URl。
+  spring.h2.console.enabled=true  #进行该配置，程序开启时就会启动h2 web consloe。当然这是默认的，如果你不想在启动程序时启动h2 web consloe，那么就设置为false。

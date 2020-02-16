@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="map-security-app" />
+        <module name="map-security-core" />
+        <module name="smart-map-web" />
+        <module name="map-security-browser" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="smart-map-base" target="1.8" />
+      <module name="smart-map-common" target="1.5" />
+      <module name="smartmapcommon" target="1.5" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="smart-map-base" options="-parameters" />
+      <module name="smart-map-web" options="" />
+    </option>
+  </component>
+</project>
