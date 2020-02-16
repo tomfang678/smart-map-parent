@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ford.security.mapper.MapHistoryMapper">
+    <select id="getList" resultType="mapHistory">
+       select a.userId,max(a.times) as times,a.title,a.tag from(
+            select userId,count(id) as times,title,tag from map_history GROUP BY userId,title,tag) a
+            group by a.userId,a.tag ORDER BY times desc
+    </select>
+    <insert id="add" parameterType="mapHistory">
+        INSERT INTO map_history (userId, title,point,
+        url,detailUrl,address,city,province,phoneNumber,postcode,
+        distance,tag,createTime
+        ) VALUES (#{userId}, #{title}
+        , #{point} , #{url} , #{detailUrl}
+         , #{address} , #{city} , #{province}
+          , #{phoneNumber} , #{postcode} , #{distance}
+          , #{tag} , #{createTime}
+        )
+    </insert>
+</mapper>

@@ -56,7 +56,7 @@ public class BrowserSecurityController {
         //获取引发跳转的请求
         SavedRequest savedRequest = requestCache.getRequest(request, response);
 
-        //如果有这个引发跳转的请求的话,且该请求以.html结尾,将重定向到我们的登陆页/nrsc-login.html
+        //如果有这个引发跳转的请求的话,且该请求以.html结尾,将重定向到我们的登陆页/login.html
         if (savedRequest != null) {
             //获取请求的url
             String targetUrl = savedRequest.getRedirectUrl();
